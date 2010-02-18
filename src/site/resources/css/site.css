@@ -1,0 +1,41 @@
+
+#bodyColumn {
+	margin-left: 10px;
+	margin-right: 10px;	
+}
+
+#leftColumn {
+	width: 200px;
+	float: right;
+	z-index: 99;
+	border: 1px #000 dashed;
+	padding: 5px;
+}
+
+h2 {
+	color: #000;
+	background: #fc0;
+	border-bottom: 1px #000 solid;
+	border-top: none;
+}
+
+table.top {
+	background: #fc0;
+	color: black;
+	border-bottom: 1px #000 solid;
+	width: 100%;
+	margin: 0px;
+	border-spacing: 0px;
+}
+
+table.top tr td.image {
+	background: #fc0 url("http://tanesha.net/Wiki/Pictures/logo1.png") no-repeat;
+	width: 46px;
+	height: 52px;
+	border-right: 1px #000 solid;
+	border-left: 1px #000 solid;
+}
+
+table.top tr td.image img {
+	border: 0px;
+}

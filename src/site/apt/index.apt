@@ -1,0 +1,111 @@
+
+ Recaptcha4j is a library to work with {{{http://recaptcha.net/}recaptcha}}'s implementation of a CAPTCHA API.
+The special about recaptcha is that their implementation picks words to help solving difficult OCR scanning processes
+so people can enjoy more books online. Thats quite a noble quest IMHO, so the more implementations of clients for their
+API, the more books we will get.
+
+News
+
+ 2007-07-03: Going fast with these minor versions, 0.0.7 is available. Since the 0.0.4 release, a typo with the noscript
+has been fixed and the themed output has also been fixed. Thanks to Darko Jankovic for pointing these errors out. Also, a 
+convenience method has been added instead of using the options to createRecaptchaHtml(errorMessage, theme, tabindex). Finally, the output has been adjusted to validate as XHTML, thanks to Carl Hagenmaier for pointing that out.
+
+ 2007-06-28: There is now a version 0.0.4 availble. This time some smaller fixes to make it work under JDK 1.4. Thanks to
+{{{http://www.villa-straylight.com/}Maelcum}} for pointing this out.
+
+Getting
+
+ You can get the source for the recaptcha4j library by subversion checkout. Just follow the links in the left menu, under
+the SCM point.
+
+ Another option is to download a prebuilt jar file. That can be done from {{{http://tanesha.net/maven2/net/tanesha/recaptcha4j/recaptcha4j/}here}}.
+ 
+ Finally, if you're using Maven2, you can include it as dependency in your project simply by adding http://tanesha.net/maven2 in your POM like
+this:
+
++-------------------------------------------------------------------------------------+
+<project>
+    ...
+	<dependency>
+		<groupId>net.tanesha.recaptcha4j</groupId>
+		<artifactId>recaptcha4j</artifactId>
+		<version>${version}</version>
+	</dependency>
+    ...
+    
+    <repositories>
+        ...
+    	<repository>
+			<id>taneshanet</id>
+			<url>http://tanesha.net/maven2</url>
+		</repository>
+        ...
+    </repositories>
+</project>
++-------------------------------------------------------------------------------------+
+
+Using
+ 
+ Before you can use the library, you need to get API keys from their website. Follow the link above to find those. After that you have
+to call the library from your code. You can do that something like this (example in JSP):
+
++-------------------------------------------------------------------------------------+
+	...
+<%
+	// create recaptcha without <noscript> tags
+	ReCaptcha captcha = ReCaptchaFactory.newReCaptcha("my-public-key", "my-private-key", false);
+	String captchaScript = captcha.createRecaptchaHtml(request.getParameter("error"), null);
+	
+	out.print(captchaScript);
+%>
+	...
++-------------------------------------------------------------------------------------+
+
+ Checking the captcha goes like this: 
+ 
++-------------------------------------------------------------------------------------+
+	...
+<%
+	// create recaptcha without <noscript> tags
+	ReCaptcha captcha = ReCaptchaFactory.newReCaptcha("my-public-key", "my-private-key", false);
+	ReCaptchaResponse response = captcha.checkAnswer(request.getRemoteAddr(), request.getParameter("recaptcha_challenge_field"), request.getParameter("recaptcha_response_field"));
+
+	if (response.isValid()) {
+		out.print("Success");
+	}
+	else {
+		out.print(response.getErrorMessage());
+	}
+%>
+	...
++-------------------------------------------------------------------------------------+
+ 
+ There is a small example web-app in the SVN-repository which you can find here: {{https://svn.tanesha.net/svn/sandbox/recaptcha4j-example/trunk/}}.
+ 
+Using with Spring
+
+ If you are using the {{{http://www.springframework.org/}Spring framework}} then you can configure the ReCaptcha as a bean in Spring quite
+easily, so you can use it for injecting into whatever other logic you might have. Instead of using the ReCaptchaFactory indirection, you 
+should use the ReCaptchaImpl directly and then use the ReCaptcha interface in your depending beans.
+
++-------------------------------------------------------------------------------------+
+<beans>
+	...
+	<bean id="reCaptcha" class="net.tanesha.recaptcha.ReCaptchaImpl">
+		<property name="privateKey" value="my private key" />
+		<property name="publicKey" value="my public key" />
+		<property name="recaptchaServer" value="http://api.recaptcha.net" />
+		<!-- Or, if you want to use SSL, then use this:
+			<property name="recaptchaServer" value="http://secure-api.recaptcha.net" />
+		-->
+		<property name="includeNoscript" value="false" />
+	</bean>
+	...
+</beans>
++-------------------------------------------------------------------------------------+
+ 
+Problems and solutions
+ 
+ * Java is little eager to cache, so you must set the System property networkaddress.cache.ttl. You can do that by passing -Dnetworkaddress.cache.ttl=500 to your app-server, or by adding System.setProperty("networkaddress.cache.ttl", "500"); somewhere in your code. See {{{http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html}java.sun.com}} for more information.
+
+ 

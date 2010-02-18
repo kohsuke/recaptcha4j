@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/maven-v4_0_0.xsd">
+                      
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.tanesha.recaptcha4j</groupId>
+	<artifactId>recaptcha4j</artifactId>
+	<version>0.0.7</version>
+	<name>ReCaptcha Java Library</name>
+	<description>ReCaptcha is a Java library for interfacing with ReCaptcha.nets Captcha service</description>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<templateDirectory>${basedir}/src/site/layout</templateDirectory>
+					<template>maven-site.vm</template>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<developers>
+		<developer>
+			<id>sorend</id>
+			<name>Soren Davidsen</name>
+			<email>soren@tanesha.net</email>
+			<roles>
+				<role>Project Manager</role>
+				<role>Developer</role>
+			</roles>
+			<organization>TaneshaNetworks</organization>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:svn:https://svn.tanesha.net/svn/sandbox/recaptcha4j/trunk</connection>
+		<developerConnection>scm:svn:https://svn.tanesha.net/svn/sandbox/recaptcha4j/trunk</developerConnection>
+		<url>https://svn.tanesha.net/svn/sandbox/recaptcha4j/trunk</url>
+	</scm>
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changelog-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>taneshanet-local-repo</id>
+			<url>file:///var/www/tanesha.net/maven2/</url>
+		</repository>
+		<site>
+			<id>taneshanet-local-sipservlite</id>
+			<url>file:///var/www/tanesha.net/projects/recaptcha4j</url>
+		</site>
+	</distributionManagement>
+</project>

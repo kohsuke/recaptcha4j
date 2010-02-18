@@ -1,0 +1,13 @@
+<project name="recaptcha4j">
+
+	<publishDate format="yyyy-MM-dd hh:mm"/>
+	
+	<body>
+		<links>
+			<item name="Recaptcha4j" href="http://tanesha.net/projects/recaptcha4j/"/>
+			<item name="Tanesha Net" href="http://tanesha.net/"/>
+		</links>
+
+		${reports}	
+	</body>
+</project>
