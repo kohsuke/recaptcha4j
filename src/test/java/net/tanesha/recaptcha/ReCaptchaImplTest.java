@@ -46,7 +46,7 @@ public class ReCaptchaImplTest extends TestCase {
 		
 		
 		String html2 = r.createRecaptchaHtml("The Error", null);
-		assertTrue(html2.indexOf("&error=The+Error") != -1);
+		assertTrue(html2.indexOf("&amp;error=The+Error") != -1);
 		
 		Properties options = new Properties();
 		options.setProperty("theme", "mytheme");

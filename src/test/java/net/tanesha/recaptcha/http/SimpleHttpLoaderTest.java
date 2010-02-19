@@ -26,7 +26,7 @@ public class SimpleHttpLoaderTest extends TestCase {
 			l.httpPost("http://www.google.com/search", "hl=da&q=bla&btnG=Google-s%C3%B8gning&meta=");
 		}
 		catch (Exception e) {
-			assertTrue(e.getMessage().indexOf("501 for URL") != -1);
+			assertTrue(e.getMessage().indexOf("405 for URL") != -1);
 		}
 	}
 
