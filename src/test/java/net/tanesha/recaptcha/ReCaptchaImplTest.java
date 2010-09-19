@@ -15,10 +15,15 @@
  */
 package net.tanesha.recaptcha;
 
+import java.io.ByteArrayInputStream;
 import java.util.Properties;
 
 import net.tanesha.recaptcha.http.HttpLoader;
 import junit.framework.TestCase;
+import org.w3c.dom.Document;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class ReCaptchaImplTest extends TestCase {
 
@@ -65,6 +70,42 @@ public class ReCaptchaImplTest extends TestCase {
 
 		
 	}
+
+    public void testNotReachable() {
+
+        r.setVerifyUrl("http://www.example.com22/");
+        ReCaptchaResponse re = r.checkAnswer("123.123.123.123", "asdfasdfasdf", "zxcvzxcvzxcv");
+
+        assertTrue(!re.isValid());
+        assertEquals("recaptcha-not-reachable", re.getErrorMessage());
+    }
+
+    public void testAlternativeVerifyUrl() {
+
+        // check that we hit the "correct" verifyurl
+        l.setNextUrl("http://www.google.com/recaptcha/api/verify");
+        r.checkAnswer("123.123.123.123", "asdfasdfasdf", "zxcvzxcvzxcv");
+
+        // check that we now hit the new one.
+        l.setNextUrl("http://www.example.com/");
+        r.setVerifyUrl("http://www.example.com/");
+        r.checkAnswer("123.123.123.123", "asdfasdfasdf", "zxcvzxcvzxcv");
+    }
+
+    public void testHtmlIsXhtml() throws Exception {
+
+        r.setIncludeNoscript(true);
+        String html = r.createRecaptchaHtml(null, null);
+
+        // wrap the html in a root element.
+        html = "<root>" + html + "</root>";
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document doc = builder.parse(new ByteArrayInputStream(html.getBytes()));
+
+        // should be OK here.
+    }
 	
 	public void testCheckAnswer() {
 		l.setNextReply("true\nnone");

@@ -15,6 +15,7 @@
  */
 package net.tanesha.recaptcha;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -27,13 +28,14 @@ public class ReCaptchaImpl implements ReCaptcha {
 	public static final String PROPERTY_THEME = "theme";
 	public static final String PROPERTY_TABINDEX = "tabindex";
 	
-	public static final String HTTP_SERVER = "http://api.recaptcha.net";
-	public static final String HTTPS_SERVER = "https://api-secure.recaptcha.net";
-	public static final String VERIFY_URL = "http://api-verify.recaptcha.net/verify";
+	public static final String HTTP_SERVER = "http://www.google.com/recaptcha/api";
+	public static final String HTTPS_SERVER = "https://www.google.com/recaptcha/api";
+	public static final String VERIFY_URL = "http://www.google.com/recaptcha/api/verify";
 	
 	private String privateKey;
 	private String publicKey;
 	private String recaptchaServer = HTTP_SERVER;
+    private String verifyUrl = VERIFY_URL;
 	private boolean includeNoscript = false;
 	private HttpLoader httpLoader = new SimpleHttpLoader();
 	
@@ -49,7 +51,10 @@ public class ReCaptchaImpl implements ReCaptcha {
 	public void setIncludeNoscript(boolean includeNoscript) {
 		this.includeNoscript = includeNoscript;
 	}
-	public void setHttpLoader(HttpLoader httpLoader) {
+    public void setVerifyUrl(String verifyUrl) {
+        this.verifyUrl = verifyUrl;
+    }
+    public void setHttpLoader(HttpLoader httpLoader) {
 		this.httpLoader  = httpLoader;
 	}
 
@@ -58,11 +63,17 @@ public class ReCaptchaImpl implements ReCaptcha {
 		String postParameters = "privatekey=" + URLEncoder.encode(privateKey) + "&remoteip=" + URLEncoder.encode(remoteAddr) +
 			"&challenge=" + URLEncoder.encode(challenge) + "&response=" + URLEncoder.encode(response);
 
-		String message = httpLoader.httpPost(VERIFY_URL, postParameters);
+        final String message;
+        try {
+            message = httpLoader.httpPost(verifyUrl, postParameters);
 
-		if (message == null) {
-			return new ReCaptchaResponse(false, "Null read from server.");
-		}
+            if (message == null) {
+                return new ReCaptchaResponse(false, "recaptcha-not-reachable");
+            }
+        }
+        catch (ReCaptchaException networkProblem) {
+            return new ReCaptchaResponse(false, "recaptcha-not-reachable");
+        }
 
 		String[] a = message.split("\r?\n");
 		if (a.length < 1) {
@@ -90,9 +101,9 @@ public class ReCaptchaImpl implements ReCaptcha {
 
 		if (includeNoscript) {
 			String noscript = "<noscript>\r\n" + 
-					"	<iframe src=\""+recaptchaServer+"/noscript?k="+publicKey + errorPart + "\" height=\"300\" width=\"500\" frameborder=\"0\"></iframe><br>\r\n" + 
+					"	<iframe src=\""+recaptchaServer+"/noscript?k="+publicKey + errorPart + "\" height=\"300\" width=\"500\" frameborder=\"0\"></iframe><br/>\r\n" +
 					"	<textarea name=\"recaptcha_challenge_field\" rows=\"3\" cols=\"40\"></textarea>\r\n" + 
-					"	<input type=\"hidden\" name=\"recaptcha_response_field\" value=\"manual_challenge\">\r\n" + 
+					"	<input type=\"hidden\" name=\"recaptcha_response_field\" value=\"manual_challenge\"/>\r\n" + 
 					"</noscript>";
 			message += noscript;
 		}
